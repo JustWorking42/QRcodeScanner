@@ -10,33 +10,42 @@ import java.awt.*;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
-public class QRcodeScanner {
-    private static JFrame window = new JFrame("Scanner");
+public class QrCodeScanner {
+    private static JFrame window = new JFrame("QR Code Scanner");
     private static Dimension size = WebcamResolution.VGA.getSize();
+    private static String lastTextResult = "";
 
     public static void webcamWindow(Webcam camera) {
         camera.setViewSize(size);
+
         WebcamPanel camPanel = new WebcamPanel(camera, size, false);
         camPanel.setDrawMode(WebcamPanel.DrawMode.FIT);
         camPanel.start();
+
         window.add(camPanel);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(new Dimension(1200, 600));
         window.setResizable(true);
         window.pack();
         window.setVisible(true);
+
         BufferedImage image;
         Result result = null;
-
 
         while ((image = camera.getImage()) != null) {
             LuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
             try {
                 result = new MultiFormatReader().decode(bitmap);
             } catch (NotFoundException ignored) { }
+
             if (result != null) {
-                System.out.println( result.getText());
+                String textResult = result.getText();
+                if (!textResult.equals(lastTextResult)) {
+                    System.out.println(textResult);
+                    lastTextResult = textResult;
+                }
             }
         }
     }
