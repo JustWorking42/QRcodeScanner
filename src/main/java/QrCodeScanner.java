@@ -6,7 +6,6 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
